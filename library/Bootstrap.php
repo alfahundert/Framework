@@ -6,20 +6,29 @@ class Bootstrap {
 	 * Controller
 	 * @var string
 	 */
-	private $_controller	= NULL;
+	private $_controller			= NULL;
 	
 	/**
 	 * Action/Method
 	 * @var string
 	 */
-	private $_action		= NULL;
+	private $_action				= NULL;
 	
 	/**
 	 * Additional params
 	 * @var array
 	 */
-	private $_params		= array();
+	private $_params				= array();
 	
+	/**
+	 * Counted params in URL
+	 * @var int
+	 */
+	private $_counted_params		= NULL;
+
+/*
+ * INIT
+ */
 	
 	/**
 	 * Init class
@@ -30,22 +39,108 @@ class Bootstrap {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->loadConfigPaths();
-		$this->loadConfigDatabase();
+		$this->_loadConfig("defaults", "DEFAULT");
+		$this->_loadConfig("paths", "PATH");
+		$this->_loadConfig("db", "DB");
 	}
 
-	public function InitUrl() {
+	/**
+	 * Init URL and process params
+	 *
+	 * @author Adrian Fischer
+	 * @since 19.01.2014
+	 *
+	 * @return void
+	 */
+	public function InitUrl() {		
 		if(isset($_GET['url'])) {
-			$url	= explode("/", rtrim($_GET['url'], "/"));
-			$this->_controller	= $url[0];
+			
+			$url						= explode("/", rtrim($_GET['url'], "/"));
+			$this->_controller			= ucfirst(strtolower($url[0])) . "Controller";
+			
+			if(isset($url[1])) {
+				$this->_action			= strtolower($url[1]);
+			} else {
+				$this->_action			= 'index';
+			}
+			
 			unset($url[0]);
-			$this->_action		= $url[1];
 			unset($url[1]);
-			$this->_params	= $url;
-			print_r($this->_params);
+			
+			if(count($url) > 2) {
+				foreach($url as $param) {
+					$this->_params[]	= $param;
+				}
+			}
+			
+			// Count params
+			$this->_counted_params		= count($this->_params);
+
+			// Call controller and method
+			$this->_callControllerMethod();
+			
 		} else {
-			// Auf startseite verweisen
+			// Call controller ans method
+			$this->_callStandardControllerMethod();
 		}
+	}
+	
+/*
+ * CALLS
+ */
+	
+	/**
+	 * Call controller an method
+	 *
+	 * @author Adrian Fischer
+	 * @since 19.01.2014
+	 *
+	 * @return void
+	 */
+	private function _callControllerMethod() {
+		// Check if method exist
+		if(!method_exists($this->_controller, $this->_action)) {
+			header("Location: /home");
+		}
+		
+		$controller	= new $this->_controller();
+		
+		switch($this->_counted_params) {
+			case 0:
+				$controller->{$this->_action}();
+				break;
+			case 1:
+				$controller->{$this->_action}($this->_params[0]);
+				break;
+			case 2:
+				$controller->{$this->_action}($this->_params[0], $this->_params[1]);
+				break;
+			case 3:
+				$controller->{$this->_action}($this->_params[0], $this->_params[1], $this->_params[2]);
+				break;
+			default:
+				// Redicrect to home
+				header("Location: /home");
+				break;
+				
+		}
+	}
+	
+	/**
+	 * Call standard controller and method
+	 *
+	 * @author Adrian Fischer
+	 * @since 19.01.2014
+	 *
+	 * @return void
+	 */
+	private function _callStandardControllerMethod() {
+		$this->_controller		= 'HomeController';
+		$this->_action			= 'index';
+		$this->_counted_params	= 0;
+		
+		$controller	= new $this->_controller();
+		$controller->{$this->_action}();
 	}
 	
 /*
@@ -53,41 +148,21 @@ class Bootstrap {
  */
 	
 	/**
-	 * Get paths from ini file
+	 * Load config file
 	 *
 	 * @author Adrian Fischer
 	 * @since 19.01.2014
 	 *
-	 * @return void
-	 */
-	private function loadConfigPaths() {
-		// Parse ini file
-		$ini	= parse_ini_file('../configs/paths.ini');
-
-		// Create constants
-		define("PATH_APLLICATION", $ini['application']);
-		define("PATH_CONFIGS", $ini['configs']);
-		define("PATH_LIBRARY", $ini['library']);
-		define("PATH_PUBLIC", $ini['public']);
-		define("PATH_ROOT", $ini['root']);
-	}
-	
-	/**
-	 * Get database login information from ini file
-	 *
-	 * @author Adrian Fischer
-	 * @since 19.01.2014
+	 * @param string $config
+	 * @param string $prefix
 	 *
 	 * @return void
 	 */
-	private function loadConfigDatabase() {
-		// Parse ini file
-		$ini	= parse_ini_file('../configs/db.ini');
+	private function _loadConfig($config, $prefix) {
+		$ini	= parse_ini_file("../configs/" . $config . ".ini");
 		
-		//Create constants
-		define("DB_HOST", $ini['host']);
-		define("DB_DATABASE", $ini['database']);
-		define("DB_USERNAME", $ini['username']);
-		define("DB_PASSWORD", $ini['password']);
+		foreach($ini as $key => $value) {
+			define($prefix . "_" . strtoupper($key), $value);
+		}
 	}
 }
