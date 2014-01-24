@@ -1,6 +1,6 @@
 <?php
 
-abstract class AbstractController {
+abstract class Controller {
 	
 	/**
 	 * View class

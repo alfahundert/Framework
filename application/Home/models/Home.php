@@ -1,6 +1,6 @@
 <?php
 
-class HomeModel extends AbstractModel {
+class HomeModel extends Model {
 	
 	
 	

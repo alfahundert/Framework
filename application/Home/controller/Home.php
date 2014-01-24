@@ -1,6 +1,6 @@
 <?php
 
-class HomeController extends AbstractController {
+class HomeController extends Controller {
 	
 	public function index() {
 		print 'home/index method';

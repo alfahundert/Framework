@@ -2,25 +2,6 @@
 
 class Autoloader {
 	
-	public function __construct() {
-		
-	}
-	
-	/**
-	 * Register autoload function
-	 *
-	 * @author Adrian Fischer
-	 * @since 23.01.2014
-	 *
-	 * @param string $function
-	 * @param Class $throw
-	 *
-	 * @return return_type
-	 */
-	public function Register($function, $throw) {
-		spl_autoload_register($function, $throw=NULL);
-	}
-	
 	/**
 	 * Set file extensions for autoloader
 	 *
@@ -31,21 +12,71 @@ class Autoloader {
 	 *
 	 * @return void
 	 */
-	public function SetExtensions($extensions=AUTOLOAD_EXTENSIONS) {
+	static private function _setExtensions($extensions=AUTOLOAD_EXTENSIONS) {
 		spl_autoload_extensions($extensions);
 	}
 	
-	public function SetIncludePath($path) {
+	/**
+	 * Set include path
+	 *
+	 * @author Adrian Fischer
+	 * @since 24.01.2014
+	 *
+	 * @param string $path
+	 *
+	 * @return void
+	 */
+	static private function _setIncludePath($path) {
 		set_include_path($path);
 	}
 	
-	public function Load($class) {
+	/**
+	 * Load class
+	 *
+	 * @author Adrian Fischer
+	 * @since 24.01.2014
+	 *
+	 * @param string $class
+	 *
+	 * @return void
+	 */
+	static private function _load($class) {
 		spl_autoload($class);
+	}
+	
+	/**
+	 * Detect class paths
+	 *
+	 * @author Adrian Fischer
+	 * @since 24.01.2014
+	 *
+	 * @param string $class
+	 *
+	 * @return void
+	 */
+	static public function Loader($class) {
+		
+		self::_setExtensions();
+		
+		switch(TRUE) {
+			case(preg_match('#^[A-Za-z]+Controller$#', $class) ? TRUE : FALSE):
+				$class_file	= PATH_APPLICATION . str_replace('Controller', '', $class) . DS . 'controller' . DS . strtolower(str_replace('Controller', '', $class)) . '.php';
+				include_once $class_file;
+				break;
+			case(preg_match('#^[A-Za-z]+Model$#', $class) ? TRUE : FALSE):
+				$class_file	= PATH_APPLICATION . str_replace('Model', '', $class) . DS . 'model' . DS . strtolower(str_replace('Model', '', $class)) . '.php';
+				include_once $class_file;
+				break;
+			default:
+				self::_setIncludePath(PATH_LIBRARY);
+				self::_load($class);
+				break;
+		}		
 	}
 	
 }
 
-
+/*
 function __autoload($class) {
 	if(stristr($class, 'Abstract')) {
 		$filepath	= PATH_ROOT . PATH_LIBRARY . strtolower(str_replace('Abstract', '', $class)) . '/' . $class . '.php';
@@ -68,15 +99,4 @@ function __autoload($class) {
 		require_once($filepath);
 	}
 }
-
-function debug($var) {
-	if(is_array($var)) {
-		echo '<pre>';
-		print_r($var);
-		echo '</pre>';
-	}
-	
-	if(is_string($var)) {
-		echo $var;
-	}
-}
+*/

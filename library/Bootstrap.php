@@ -25,6 +25,12 @@ class Bootstrap {
 	 * @var int
 	 */
 	private $_counted_params		= NULL;
+	
+	/**
+	 * Autoloader class
+	 * @var Autoloader
+	 */
+	private $_autoloader			= NULL;
 
 /*
  * INIT
@@ -40,6 +46,8 @@ class Bootstrap {
 	 */
 	public function __construct() {
 		$this->_loadConfigs();
+		$this->_initAutoloader();
+		spl_autoload_register(array('Autoloader' , 'Loader'));
 	}
 
 	/**
@@ -50,7 +58,8 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public function InitUrl() {		
+	public function InitUrl() {
+		
 		if(isset($_GET['url'])) {
 			
 			$url						= explode("/", rtrim($_GET['url'], "/"));
@@ -83,6 +92,20 @@ class Bootstrap {
 		}
 	}
 	
+	/**
+	 * Init Autoloader
+	 *
+	 * @author Adrian Fischer
+	 * @since 24.01.2014
+	 *
+	 * @return void
+	 */
+	private function _initAutoloader() {
+		require_once 'Autoloader.php';
+		
+		$this->_autoloader	= new Autoloader();
+	}
+	
 /*
  * CALLS
  */
@@ -97,9 +120,11 @@ class Bootstrap {
 	 */
 	private function _callControllerMethod() {
 		// Check if method exist
+		
 		if(!method_exists($this->_controller, $this->_action)) {
+			#throw new Exception('METHOD NOT FOUND!');
 			header("Location: /home");
-		}
+		}		
 		
 		$controller	= new $this->_controller();
 		
@@ -140,7 +165,7 @@ class Bootstrap {
 		$controller	= new $this->_controller();
 		$controller->{$this->_action}();
 	}
-	
+
 /*
  * LOADER
  */
@@ -154,12 +179,12 @@ class Bootstrap {
 	 * @return void
 	 */
 	private function _loadConfigs() {
-		$files	= scandir(PATH_ROOT . DIRECTORY_SEPARATOR . 'configs');
+		$files	= scandir(PATH_ROOT . DS . 'configs');
 		unset($files[0]);
 		unset($files[1]);
-		
+	
 		foreach($files as $file) {
-			include_once PATH_CONFIGS . $file . '.php';
+			include_once PATH_ROOT . DS . 'configs' . DS . $file;
 		}
 	}
 }
