@@ -39,9 +39,7 @@ class Bootstrap {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->_loadConfig("defaults", "DEFAULT");
-		$this->_loadConfig("paths", "PATH");
-		$this->_loadConfig("db", "DB");
+		$this->_loadConfigs();
 	}
 
 	/**
@@ -90,7 +88,7 @@ class Bootstrap {
  */
 	
 	/**
-	 * Call controller an method
+	 * Call controller and method
 	 *
 	 * @author Adrian Fischer
 	 * @since 19.01.2014
@@ -148,21 +146,20 @@ class Bootstrap {
  */
 	
 	/**
-	 * Load config file
+	 * Load config files
 	 *
 	 * @author Adrian Fischer
-	 * @since 19.01.2014
-	 *
-	 * @param string $config
-	 * @param string $prefix
+	 * @since 23.01.2014
 	 *
 	 * @return void
 	 */
-	private function _loadConfig($config, $prefix) {
-		$ini	= parse_ini_file("../configs/" . $config . ".ini");
+	private function _loadConfigs() {
+		$files	= scandir(PATH_ROOT . DIRECTORY_SEPARATOR . 'configs');
+		unset($files[0]);
+		unset($files[1]);
 		
-		foreach($ini as $key => $value) {
-			define($prefix . "_" . strtoupper($key), $value);
+		foreach($files as $file) {
+			include_once PATH_CONFIGS . $file . '.php';
 		}
 	}
 }

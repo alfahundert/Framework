@@ -7,5 +7,5 @@ class HomeController extends AbstractController {
 		$this->view->pagetitle	= 'Home/Index View';
 		$this->view->Render("index");
 	}
-	
+		
 }
