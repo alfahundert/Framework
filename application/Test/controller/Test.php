@@ -1,12 +1,11 @@
 <?php
 
-class TestController extends AbstractController {
+class TestController extends Controller {
 	
 	public function index() {
-		print 'test/index method';
-		$this->view->pagetitle	= 'Test/Index View';
-		
-		$this->view->Render();
+		$view				= new View();
+		$view->pagetitle	= 'Test/Index View';
+		$view->Render('Test');
 	}
 	
 }

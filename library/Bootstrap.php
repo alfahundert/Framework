@@ -60,11 +60,17 @@ class Bootstrap {
 	 */
 	public function InitUrl() {
 		
-		if(isset($_GET['url'])) {
+		$url	= URI::GetParam('url');
+		
+		if(is_null($url)) {
+			// Call controller ans method
+			$this->_callStandardControllerMethod();
 			
-			$url						= explode("/", rtrim($_GET['url'], "/"));
+		} else {
+				
+			$url						= explode("/", rtrim($url, "/"));
 			$this->_controller			= ucfirst(strtolower($url[0])) . "Controller";
-			
+				
 			if(isset($url[1])) {
 				$this->_action			= strtolower($url[1]);
 			} else {
@@ -82,13 +88,9 @@ class Bootstrap {
 			
 			// Count params
 			$this->_counted_params		= count($this->_params);
-
+	
 			// Call controller and method
 			$this->_callControllerMethod();
-			
-		} else {
-			// Call controller ans method
-			$this->_callStandardControllerMethod();
 		}
 	}
 	
@@ -122,8 +124,7 @@ class Bootstrap {
 		// Check if method exist
 		
 		if(!method_exists($this->_controller, $this->_action)) {
-			#throw new Exception('METHOD NOT FOUND!');
-			header("Location: /home");
+			URI::Redirect(DEFAULT_CONTROLLER);
 		}		
 		
 		$controller	= new $this->_controller();
@@ -142,8 +143,8 @@ class Bootstrap {
 				$controller->{$this->_action}($this->_params[0], $this->_params[1], $this->_params[2]);
 				break;
 			default:
-				// Redicrect to home
-				header("Location: /home");
+				// Redicrect to default controller
+				URI::Redirect(DEFAULT_CONTROLLER);
 				break;
 				
 		}
@@ -158,7 +159,7 @@ class Bootstrap {
 	 * @return void
 	 */
 	private function _callStandardControllerMethod() {
-		$this->_controller		= 'HomeController';
+		$this->_controller		= DEFAULT_CONTROLLER . 'Controller';
 		$this->_action			= 'index';
 		$this->_counted_params	= 0;
 		

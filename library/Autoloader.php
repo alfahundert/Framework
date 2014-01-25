@@ -59,44 +59,33 @@ class Autoloader {
 		self::_setExtensions();
 		
 		switch(TRUE) {
+			
+			// Controller
 			case(preg_match('#^[A-Za-z]+Controller$#', $class) ? TRUE : FALSE):
 				$class_file	= PATH_APPLICATION . str_replace('Controller', '', $class) . DS . 'controller' . DS . strtolower(str_replace('Controller', '', $class)) . '.php';
 				include_once $class_file;
 				break;
+			
+			// Models
 			case(preg_match('#^[A-Za-z]+Model$#', $class) ? TRUE : FALSE):
 				$class_file	= PATH_APPLICATION . str_replace('Model', '', $class) . DS . 'model' . DS . strtolower(str_replace('Model', '', $class)) . '.php';
 				include_once $class_file;
 				break;
+			
+			// Library Subfolders
+			case(preg_match('#[A-Za-z]+_#', $class) ? TRUE : FALSE):
+				$folders	= str_replace("_", DS, $class);
+				$class_file	= PATH_LIBRARY . $folders . '.php';
+				include_once $class_file;
+				break;
+
+			// Library
 			default:
 				self::_setIncludePath(PATH_LIBRARY);
 				self::_load($class);
 				break;
+				
 		}		
 	}
 	
 }
-
-/*
-function __autoload($class) {
-	if(stristr($class, 'Abstract')) {
-		$filepath	= PATH_ROOT . PATH_LIBRARY . strtolower(str_replace('Abstract', '', $class)) . '/' . $class . '.php';
-		require_once($filepath);
-	}
-	elseif(stristr($class, 'Controller')) {
-		$filepath	= PATH_ROOT . PATH_APPLICATION . ucfirst(strtolower(str_replace('Controller', '', $class))) . '/controller/' . ucfirst(strtolower(str_replace('Controller', '', $class))) . '.php';
-		if(file_exists($filepath)) {
-			require_once($filepath);
-		} else {
-			header("Location: /home");
-		}
-	}
-	elseif(stristr($class, 'Model')) {
-		$filepath	= PATH_ROOT . PATH_APPLICATION . ucfirst(strtolower(str_replace('Model', '', $class))) . '/models/' . ucfirst(strtolower(str_replace('model', '', $class))) . '.php';
-		require_once($filepath);
-	}
-	else {
-		$filepath	= PATH_ROOT . PATH_LIBRARY . strtolower($class) . '/' . $class . '.php';
-		require_once($filepath);
-	}
-}
-*/
