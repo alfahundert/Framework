@@ -48,6 +48,7 @@ class Bootstrap {
 		$this->_loadConfigs();
 		$this->_initAutoloader();
 		spl_autoload_register(array('Autoloader' , 'Loader'));
+		set_exception_handler("ExceptionHandler::catchException");
 	}
 
 	/**

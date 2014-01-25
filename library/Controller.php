@@ -2,10 +2,10 @@
 
 abstract class Controller {
 	
-	/**
-	 * View class
-	 * @var View
-	 */
 	protected $view	= NULL;
+	
+	public function __construct() {
+		$this->view	= new View();
+	}
 	
 }
