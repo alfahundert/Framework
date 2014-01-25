@@ -100,6 +100,16 @@ class ExceptionHandler extends Exception {
 		
 	}
 	
+	/**
+	 * Write exception to file
+	 *
+	 * @author Adrian Fischer
+	 * @since 25.01.2014
+	 *
+	 * @param unknown $errorCode
+	 *
+	 * @return return_type
+	 */
 	static private function _logError($errorCode) {
 		$content	= "Fehlercode: " . $errorCode . " 	\r\n";
 		$content	.= "Message: " . self::$_message . "\r\n";
