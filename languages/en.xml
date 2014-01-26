@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<language>
+		<segment id="test">This is an example</segment>
+		<segment id="test1">This is an example, too</segment>
+	</language>

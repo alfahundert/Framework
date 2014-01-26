@@ -93,7 +93,9 @@ class ExceptionHandler extends Exception {
 		}
 		
 		// Log error to exception file
-		self::_logError($errorCode);
+		if(ENVIRONMENT != 'development') {
+			self::_logError($errorCode);
+		}
 		
 		// Show exception
 		Bootstrap_Alert::Create('danger', 'An error has occured!', $content);

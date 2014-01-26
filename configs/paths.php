@@ -1,6 +1,7 @@
 <?php
 define("PATH_APPLICATION", PATH_ROOT . 'application' . DS);
 define("PATH_CONFIGS", PATH_ROOT . 'configs' . DS);
+define("PATH_LANGUAGES", PATH_ROOT . 'languages' . DS);
 define("PATH_LIBRARY", PATH_ROOT . 'library' . DS);
 define("PATH_LOGS", PATH_ROOT . 'logs' . DS);
 define("PATH_PUBLIC", PATH_ROOT . 'public' . DS);

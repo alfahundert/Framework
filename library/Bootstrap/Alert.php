@@ -47,8 +47,7 @@ class Bootstrap_Alert {
 	 * @author Adrian Fischer
 	 * @since 25.01.2014
 	 *
-	 *
-	 * @return return_type
+	 * @return void
 	 */
 	static private function _render() {
 		echo '<div class="alert alert-' . self::$_type . '"><b>' . self::$_headline . '</b><br/>' . self::$_content . '</div>';

@@ -27,6 +27,12 @@ class Bootstrap {
 	private $_counted_params		= NULL;
 	
 	/**
+	 * Language
+	 * @var string
+	 */
+	static private $_language		= NULL;
+	
+	/**
 	 * Autoloader class
 	 * @var Autoloader
 	 */
@@ -65,23 +71,32 @@ class Bootstrap {
 		
 		if(is_null($url)) {
 			// Call controller ans method
+			$this->_setLanguage();
 			$this->_callStandardControllerMethod();
 			
 		} else {
 				
 			$url						= explode("/", rtrim($url, "/"));
-			$this->_controller			= ucfirst(strtolower($url[0])) . "Controller";
+			
+			if(isset($url[0])) {
+				$this->_setLanguage(strtolower($url[0]));
+			} else {
+				$this->_setLanguage();
+			}
+			
+			$this->_controller			= ucfirst(strtolower($url[1])) . "Controller";
 				
-			if(isset($url[1])) {
-				$this->_action			= strtolower($url[1]);
+			if(isset($url[2])) {
+				$this->_action			= strtolower($url[2]);
 			} else {
 				$this->_action			= 'index';
 			}
 			
 			unset($url[0]);
 			unset($url[1]);
+			unset($url[2]);
 			
-			if(count($url) > 2) {
+			if(count($url) > 3) {
 				foreach($url as $param) {
 					$this->_params[]	= $param;
 				}
@@ -125,7 +140,7 @@ class Bootstrap {
 		// Check if method exist
 		
 		if(!method_exists($this->_controller, $this->_action)) {
-			URI::Redirect(DEFAULT_CONTROLLER);
+			URI::Redirect(self::$_language . '/' . DEFAULT_CONTROLLER);
 		}		
 		
 		$controller	= new $this->_controller();
@@ -145,7 +160,7 @@ class Bootstrap {
 				break;
 			default:
 				// Redicrect to default controller
-				URI::Redirect(DEFAULT_CONTROLLER);
+				URI::Redirect(self::$_language . '/' . DEFAULT_CONTROLLER);
 				break;
 				
 		}
@@ -189,4 +204,31 @@ class Bootstrap {
 			include_once PATH_ROOT . DS . 'configs' . DS . $file;
 		}
 	}
+
+/*
+ * GETTER
+ */
+	/**
+	 * Get language
+	 * 
+	 * @author Adrian Fischer
+	 * @since 26.01.2014
+	 *
+	 * @return string
+	 */
+	static public function GetLanguage() {
+		return self::$_language;
+	}
+	
+/*
+ * SETTER
+ */
+	private function _setLanguage($language=NULL) {
+		if(!is_null($language)) {
+			self::$_language		= strtolower($language);
+		} else {
+			self::$_language		= Language::GetGeoLocationFromIp();
+		}
+	}
+	
 }
