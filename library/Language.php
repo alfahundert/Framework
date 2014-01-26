@@ -4,9 +4,15 @@ class Language {
 	
 	/**
 	 * Translation segments
-	 * @var DOMElement
+	 * @var array
 	 */
 	static private $_segments	= array();
+	
+	/**
+	 * Language
+	 * @var string
+	 */
+	static private $_language	= NULL;
 	
 	/**
 	 * Load language from file
@@ -18,7 +24,7 @@ class Language {
 	 * 
 	 * @return void
 	 */
-	static private function _loadLanguage($lang) {
+	static public function LoadFile($lang) {
 		$xml			= new DomDocument('1.0');
 		$document_path	= PATH_LANGUAGES . strtolower($lang) . '.xml';
 		$xml->load($document_path);		
@@ -27,26 +33,6 @@ class Language {
 		foreach($segments as $segment) {
 			self::$_segments[$segment->getAttribute('id')]	= $segment->firstChild->nodeValue;
 		}
-	}
-	
-	/**
-	 * Get translation
-	 * 
-	 * @author Adrian Fischer
-	 * @since 26.01.2014
-	 *
-	 * @param string $label
-	 * 
-	 * @return string
-	 */
-	static public function Get($label, $return=false) {
-		self::_loadLanguage(Bootstrap::GetLanguage());
-		
-		if($return) {
-			return self::$_segments[$label];
-		}
-		
-		echo self::$_segments[$label];		
 	}
 	
 	/**
@@ -85,6 +71,88 @@ class Language {
 		} else {
 			return DEFAULT_LANGUAGE;
 		}
+	}
+	
+	/**
+	 * Get languages
+	 *
+	 * @author Adrian Fischer
+	 * @since 26.01.2014
+	 *
+	 * @return array
+	 */
+	static public function GetAvailableLanguages() {
+		$files	= scandir(PATH_LANGUAGES);
+		unset($files[0]);
+		unset($files[1]);
+		
+		foreach($files as $file) {
+			$langs[]	= strtolower(str_replace(".xml", "", $file));
+		}
+		
+		return $langs;
+	}
+	
+	/**
+	 * Set or detect language
+	 *
+	 * @author Adrian Fischer
+	 * @since 26.01.2014
+	 *
+	 * @param string $language
+	 *
+	 * @return void
+	 */
+	static public function Set($language=NULL) {
+		if(!is_null($language) && in_array(strtolower($language), self::GetAvailableLanguages())) {
+			self::$_language		= strtolower($language);
+		} else {
+			self::$_language		= self::GetGeoLocationFromIp();
+		}
+	}
+	
+	/**
+	 * Get language
+	 *
+	 * @author Adrian Fischer
+	 * @since 26.01.2014
+	 *
+	 * @return string
+	 */
+	static public function GetLanguage() {
+		return self::$_language;
+	}
+	
+	/**
+	 * Get segments
+	 *
+	 * @author Adrian Fischer
+	 * @since 26.01.2014
+	 *
+	 * @return array
+	 */
+	static public function GetSegments() {
+		return self::$_segments;
+	}
+	
+	/**
+	 * Get segment
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param string $label
+	 *
+	 * @return string
+	 */
+	static public function GetSegment($label) {
+		// Return label
+		if(!key_exists($label, self::$_segments)) {
+			return "#" . $label;
+		}
+		
+		// Return segment
+		return self::$_segments[$label];
 	}
 	
 }

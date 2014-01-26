@@ -57,21 +57,21 @@ class URI {
 	 * @return void
 	 */
 	static public function Redirect($controller=DEFAULT_CONTROLLER, $action=NULL, $params=array()) {
-		$path	= '/' . strtolower($controller) . '/';
+		$url	= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
 		
 		// add action
 		if(!is_null($action)) {
-			$path	.= $action . '/';
+			$url	.= $action . '/';
 		}
 		
 		if(is_array($params) && count($params) != 0) {
 			foreach($params as $param => $value) {
-				$path	.= $param . '/' . $value;
+				$url	.= $param . '/' . $value;
 			}
 		}
 		
 		// Process redirect
-		header("Location: ". $path);
+		header("Location: ". $url);
 	}
 	
 }

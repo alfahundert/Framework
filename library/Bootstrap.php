@@ -12,7 +12,7 @@ class Bootstrap {
 	 * Action/Method
 	 * @var string
 	 */
-	private $_action				= NULL;
+	private $_action				= 'index';
 	
 	/**
 	 * Additional params
@@ -24,13 +24,7 @@ class Bootstrap {
 	 * Counted params in URL
 	 * @var int
 	 */
-	private $_counted_params		= NULL;
-	
-	/**
-	 * Language
-	 * @var string
-	 */
-	static private $_language		= NULL;
+	private $_counted_params		= 0;
 	
 	/**
 	 * Autoloader class
@@ -51,7 +45,7 @@ class Bootstrap {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->_loadConfigs();
+		$this->_loadConfigs();		
 		$this->_initAutoloader();
 		spl_autoload_register(array('Autoloader' , 'Loader'));
 		set_exception_handler("ExceptionHandler::catchException");
@@ -65,38 +59,39 @@ class Bootstrap {
 	 *
 	 * @return void
 	 */
-	public function InitUrl() {
+	public function Init() {
 		
 		$url	= URI::GetParam('url');
 		
 		if(is_null($url)) {
 			// Call controller ans method
-			$this->_setLanguage();
-			$this->_callStandardControllerMethod();
-			
+			Language::Set();
+			URI::Redirect();
 		} else {
-				
-			$url						= explode("/", rtrim($url, "/"));
+			
+			$url	= explode("/", rtrim($url, "/"));
+			Language::Set();
 			
 			if(isset($url[0])) {
-				$this->_setLanguage(strtolower($url[0]));
-			} else {
-				$this->_setLanguage();
+				Language::Set((strtolower($url[0])));
 			}
 			
-			$this->_controller			= ucfirst(strtolower($url[1])) . "Controller";
+			if(isset($url[1])) {
+				$this->_controller	= ucfirst(strtolower($url[1])) . "Controller";
+			} else {
+				$this->_controller	= DEFAULT_CONTROLLER;
+			}
 				
 			if(isset($url[2])) {
-				$this->_action			= strtolower($url[2]);
-			} else {
-				$this->_action			= 'index';
+				$this->_action		= strtolower($url[2]);
 			}
 			
-			unset($url[0]);
-			unset($url[1]);
-			unset($url[2]);
+			unset($url[0]); // Language
+			unset($url[1]); // Controller
+			unset($url[2]); // Action
 			
-			if(count($url) > 3) {
+			// Check if parameters exist
+			if(count($url) > 1) {
 				foreach($url as $param) {
 					$this->_params[]	= $param;
 				}
@@ -104,7 +99,7 @@ class Bootstrap {
 			
 			// Count params
 			$this->_counted_params		= count($this->_params);
-	
+			
 			// Call controller and method
 			$this->_callControllerMethod();
 		}
@@ -140,7 +135,7 @@ class Bootstrap {
 		// Check if method exist
 		
 		if(!method_exists($this->_controller, $this->_action)) {
-			URI::Redirect(self::$_language . '/' . DEFAULT_CONTROLLER);
+			URI::Redirect();
 		}		
 		
 		$controller	= new $this->_controller();
@@ -160,7 +155,7 @@ class Bootstrap {
 				break;
 			default:
 				// Redicrect to default controller
-				URI::Redirect(self::$_language . '/' . DEFAULT_CONTROLLER);
+				URI::Redirect();
 				break;
 				
 		}
@@ -202,32 +197,6 @@ class Bootstrap {
 	
 		foreach($files as $file) {
 			include_once PATH_ROOT . DS . 'configs' . DS . $file;
-		}
-	}
-
-/*
- * GETTER
- */
-	/**
-	 * Get language
-	 * 
-	 * @author Adrian Fischer
-	 * @since 26.01.2014
-	 *
-	 * @return string
-	 */
-	static public function GetLanguage() {
-		return self::$_language;
-	}
-	
-/*
- * SETTER
- */
-	private function _setLanguage($language=NULL) {
-		if(!is_null($language)) {
-			self::$_language		= strtolower($language);
-		} else {
-			self::$_language		= Language::GetGeoLocationFromIp();
 		}
 	}
 	
