@@ -7,4 +7,4 @@ define('PATH_ROOT', $_SERVER['DOCUMENT_ROOT'] . DS);
 
 require_once('../library/Bootstrap.php');
 $bootstrap	= new Bootstrap();
-$bootstrap->InitUrl();
+$bootstrap->Init();

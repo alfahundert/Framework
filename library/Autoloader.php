@@ -68,7 +68,7 @@ class Autoloader {
 			
 			// Models
 			case(preg_match('#^[A-Za-z]+Model$#', $class) ? TRUE : FALSE):
-				$class_file	= PATH_APPLICATION . str_replace('Model', '', $class) . DS . 'model' . DS . strtolower(str_replace('Model', '', $class)) . '.php';
+				$class_file	= PATH_APPLICATION . str_replace('Model', '', $class) . DS . 'models' . DS . strtolower(str_replace('Model', '', $class)) . '.php';
 				include_once $class_file;
 				break;
 			

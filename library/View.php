@@ -1,7 +1,7 @@
 <?php
 
 class View {
-	
+
 	/**
 	 * Title of the page
 	 * @var string
@@ -26,11 +26,21 @@ class View {
 		$this->RenderHeader();
 	}
 	
-	public function SetParams($vars = array()) {
+	/**
+	 * Set parameters for view
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param array $vars
+	 *
+	 * @return void
+	 */
+	public function SetParams($vars=array()) {
 		foreach($vars as $var => $val) {
 			$this->__set($var, $val);
 		}
-	} 
+	}
 	
 	/**
 	 * Get data vars
@@ -62,7 +72,7 @@ class View {
 	 * @return return_type
 	 */
 	public function __set($varName, $value){
-		$this->data[$varName] = $value;
+		$this->data[$varName]	= $value;
 	}
 	
 	/**
@@ -90,7 +100,7 @@ class View {
 	 */
 	public function Render($controller=DEFAULT_CONTROLLER, $view='index') {
 		include_once PATH_APPLICATION . ucfirst($controller) . DS . 'views' . DS . $view . ".phtml";
-		
+	
 		include_once PATH_VIEW_FOOTER;
 	}
 }
