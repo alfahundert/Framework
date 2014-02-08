@@ -33,15 +33,17 @@ class URI {
 	 * @return mixed | NULL
 	 */
 	static public function GetAllParameters() {
+		$params	= array();
+		
 		if(isset($_GET)) {
-			return $_GET;
+			$params	= array_merge($params, $_GET);
 		}
 		
 		if(isset($_POST)) {
-			return $_POST;
+			$params	= array_merge($params, $_POST);
 		}
 		
-		return NULL;
+		return $params;
 	}
 	
 	/**
@@ -57,21 +59,64 @@ class URI {
 	 * @return void
 	 */
 	static public function Redirect($controller=DEFAULT_CONTROLLER, $action=NULL, $params=array()) {
-		$url	= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
-		
-		// add action
-		if(!is_null($action)) {
-			$url	.= $action . '/';
-		}
-		
-		if(is_array($params) && count($params) != 0) {
-			foreach($params as $param => $value) {
-				$url	.= $param . '/' . $value;
-			}
-		}
+		$url	= self::GenerateUrl($controller, $action, $params);
 		
 		// Process redirect
 		header("Location: ". $url);
+		exit;
+	}
+	
+	/**
+	 * Generate URL
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param string $controller
+	 * @param string $action
+	 * @param array $params
+	 *
+	 * @return string
+	 */
+	static public function GenerateUrl($controller, $action=NULL, $params=array()) {
+		$url	= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
+		
+		if(!is_null($action)) {
+			$url	.= strtolower($action) . '/';
+		}
+		
+		if(is_array($params) && count($params) > 0) {
+			foreach($params as $param) {
+				$url	.= $param . '/';
+			}
+		}
+		return $url;
+	}
+
+	/**
+	 * Show Apache error
+	 *
+	 * @author Adrian Fischer
+	 * @since 07.02.2014
+	 *
+	 * @param int $code
+	 * @param bool $show_file
+	 *
+	 * @return void
+	 */
+	static public function ShowHttpError($code, $show_file=false) {
+		if(empty($code)) {
+			throw new Exception('No errorcode set!');
+		}
+		
+		// Show error page
+		header("HTTP/1.0 ". $code);
+		
+		if($show_file) {
+			include "";
+		}
+		
+		exit;
 	}
 	
 }

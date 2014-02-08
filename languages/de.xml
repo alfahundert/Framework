@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<language>
-		<segment id="test">Dies ist ein $1 Beispiel $2</segment>
-		<segment id="test1">Dies ist auch ein Beispiel</segment>
+		<segment id=""></segment>
+		<segment id="lbl_username">Benutzername</segment>
+		<segment id="lbl_password">Passwort</segment>
+		<segment id="lbl_login">Einloggen</segment>
+		<segment id="lbl_logout">Ausloggen</segment>
+		<segment id="lbl_register">Registrieren</segment>
+		<segment id="lbl_news">Neuigkeiten</segment>
+		<segment id="lbl_language">Sprache</segment>
+		<segment id="lbl_server">Server</segment>
+		
+		<segment id="lang_german">Deutsch</segment>
+		<segment id="lang_english">Englisch</segment>
+		
+		<segment id="nav_home">Startseite</segment>
+		<segment id="nav_forums">Forum</segment>
+		<segment id="nav_about_us">Impressum</segment>
+		<segment id="nav_media">Media</segment>
+		<segment id="nav_ticketsystem">Ticketsystem</segment>
 	</language>

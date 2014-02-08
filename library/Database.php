@@ -2,10 +2,6 @@
 
 class Database extends PDO {
 	
-	private $_select	= NULL;
-	
-	private $_insert	= NULL;
-	
 	/**
 	 * Init class
 	 *
@@ -19,7 +15,7 @@ class Database extends PDO {
 	}
 	
 	/**
-	 * HERE NEEDS TO BE A DESCRIPTION
+	 * Select columns
 	 *
 	 * @author Adrian Fischer
 	 * @since 27.01.2014
@@ -31,7 +27,7 @@ class Database extends PDO {
 	 * 
 	 * @return mixed
 	 */
-	public function Select1($query, $params=array(), $fetchMode = PDO::FETCH_ASSOC, $column=NULL) {
+	public function Select($query, $params=array(), $fetchMode = PDO::FETCH_ASSOC, $column=NULL) {
 		$sth	= $this->prepare($query);
 		
 		$sth->execute($params);
@@ -42,7 +38,18 @@ class Database extends PDO {
 		return $sth->fetchAll($fetchMode);
 	}
 	
-	public function Insert1($table, $params=array()) {
+	/**
+	 * Insert values
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param string $table
+	 * @param array $params
+	 *
+	 * @return void
+	 */
+	public function Insert($table, $params=array()) {
 		
 		ksort($params);
 		
@@ -55,68 +62,88 @@ class Database extends PDO {
 			$sth->bindValue(":$key", $value);
 		}
 		
-		
-		$sth->execute();
-	}
-	
-	
-	/**
-	 * insert
-	 * @param string $table A name of table to insert into
-	 * @param string $data An associative array
-	 */
-	public function insert($table, $data)
-	{
-		ksort($data);
-	
-		$fieldNames = implode('`, `', array_keys($data));
-		$fieldValues = ':' . implode(', :', array_keys($data));
-	
-		$sth = $this->prepare("INSERT INTO $table (`$fieldNames`) VALUES ($fieldValues)");
-	
-		foreach ($data as $key => $value) {
-			$sth->bindValue(":$key", $value);
-		}
-	
-		$sth->execute();
+		// Execute
+		return $sth->execute();
 	}
 	
 	/**
-	 * update
-	 * @param string $table A name of table to insert into
-	 * @param string $data An associative array
-	 * @param string $where the WHERE query part
-	 */
-	public function update($table, $data, $where)
-	{
-		ksort($data);
-	
-		$fieldDetails = NULL;
-		foreach($data as $key=> $value) {
-			$fieldDetails .= "`$key`=:$key,";
-		}
-		$fieldDetails = rtrim($fieldDetails, ',');
-	
-		$sth = $this->prepare("UPDATE $table SET $fieldDetails WHERE $where");
-	
-		foreach ($data as $key => $value) {
-			$sth->bindValue(":$key", $value);
-		}
-	
-		$sth->execute();
-	}
-	
-	/**
-	 * delete
+	 * Update column
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
 	 *
 	 * @param string $table
+	 * @param array $params
 	 * @param string $where
-	 * @param integer $limit
-	 * @return integer Affected Rows
+	 *
+	 * @return void
 	 */
-	public function delete($table, $where, $limit = 1)
-	{
-		return $this->exec("DELETE FROM $table WHERE $where LIMIT $limit");
+	public function Update($table, $params, $where) {
+		ksort($params);
+	
+		$fieldDetails	= $this->_buildStringFromParams($params);
+		
+		// Prepare statement
+		$sth = $this->prepare("UPDATE $table SET $fieldDetails WHERE $where");
+	
+		$this->_bindParamValues($sth, $params);
+	
+		// Execute
+		return $sth->execute();
 	}
 	
+	/**
+	 * Delete datasets
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param string $table
+	 * @param array $params
+	 * @param int $limit
+	 *
+	 * @return void
+	 */
+	public function Delete($table, $params, $limit=1) {
+		$where	= $this->_buildStringFromParams($params);
+		$query	= 'DELETE FROM ' . $table . 'WHERE ' . $where . ' LIMIT ' . $limit;
+		return $this->exec($query);
+	}
+	
+	/**
+	 * Build string from parameters
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param array $params
+	 * 
+	 * @return string
+	 */
+	private function _buildStringFromParams($params) {
+		$result	= '';
+		foreach($params as $key=> $value) {
+			$result	.= "`$key`=:$key,";
+		}
+		$result	= rtrim($result, ',');
+		
+		return $result;
+	}
+	
+	/**
+	 * Bind parameter values to placeholders
+	 *
+	 * @author Adrian Fischer
+	 * @since 27.01.2014
+	 *
+	 * @param PDO $pdo
+	 * @param array $params
+	 *
+	 * @return void
+	 */
+	private function _bindParamValues($sth, $params) {
+		foreach ($params as $key => $value) {
+			$sth->bindValue(":$key", $value);
+		}
+	}
 }

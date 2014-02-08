@@ -1,10 +1,56 @@
 <html>
 	<head>
 		<title><?php echo $this->pagetitle; ?></title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
 		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" type="text/css" href="/public/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="/public/css/stylesheet.css">
 		
+		<script src="/public/js/jquery-2.1.0.min.js"></script>
 		<script src="/public/js/bootstrap.min.js"></script>
+		
+		<script>
+		$( document ).ready(function() {
+			function adjustModalMaxHeightAndPosition(){
+				  $('.modal').each(function(){
+				    if($(this).hasClass('in') == false){
+				      $(this).show();
+				    };
+				    var contentHeight = $(window).height() - 60;
+				    var headerHeight = $(this).find('.modal-header').outerHeight() || 0;
+				    var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+	
+				    $(this).find('.modal-content').css({
+				      'max-height': function () {
+				        return contentHeight;
+				      }
+				    });
+	
+				    $(this).find('.modal-body').css({
+				      'max-height': function () {
+				        return (contentHeight - (headerHeight + footerHeight));
+				      }
+				    });
+	
+				    $(this).find('.modal-dialog').css({
+				      'margin-top': function () {
+				        return -($(this).outerHeight() / 2);
+				      },
+				      'margin-left': function () {
+				        return -($(this).outerWidth() / 2);
+				      }
+				    });
+				    if($(this).hasClass('in') == false){
+				      $(this).hide();
+				    };
+				  });
+				};
+	
+				$(window).resize(adjustModalMaxHeightAndPosition).trigger("resize");
+		});
+		</script>
 	</head>
 	<body>

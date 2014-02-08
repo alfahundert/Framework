@@ -47,6 +47,7 @@ class Bootstrap {
 	public function __construct() {
 		$this->_loadConfigs();		
 		$this->_initAutoloader();
+		include_once '../library/Functions.php';
 		spl_autoload_register(array('Autoloader' , 'Loader'));
 		set_exception_handler("ExceptionHandler::catchException");
 	}
@@ -135,8 +136,8 @@ class Bootstrap {
 		// Check if method exist
 		
 		if(!method_exists($this->_controller, $this->_action)) {
-			URI::Redirect();
-		}		
+			URI::ShowHttpError('404');
+		}
 		
 		$controller	= new $this->_controller();
 		

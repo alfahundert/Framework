@@ -6,7 +6,7 @@ abstract class Model {
 	 * Store database class
 	 * @var Database
 	 */
-	public $db	= NULL;
+	protected $db	= NULL;
 	
 	/**
 	 * Init model

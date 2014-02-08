@@ -63,12 +63,18 @@ class Autoloader {
 			// Controller
 			case(preg_match('#^[A-Za-z]+Controller$#', $class) ? TRUE : FALSE):
 				$class_file	= PATH_APPLICATION . str_replace('Controller', '', $class) . DS . 'controller' . DS . strtolower(str_replace('Controller', '', $class)) . '.php';
+				if(!file_exists($class_file)) {
+					URI::ShowHttpError(404);
+				}
 				include_once $class_file;
 				break;
 			
 			// Models
 			case(preg_match('#^[A-Za-z]+Model$#', $class) ? TRUE : FALSE):
 				$class_file	= PATH_APPLICATION . str_replace('Model', '', $class) . DS . 'models' . DS . strtolower(str_replace('Model', '', $class)) . '.php';
+				if(!file_exists($class_file)) {
+					URI::ShowHttpError(404);
+				}
 				include_once $class_file;
 				break;
 			
@@ -76,6 +82,9 @@ class Autoloader {
 			case(preg_match('#[A-Za-z]+_#', $class) ? TRUE : FALSE):
 				$folders	= str_replace("_", DS, $class);
 				$class_file	= PATH_LIBRARY . $folders . '.php';
+				if(!file_exists($class_file)) {
+					URI::ShowHttpError(404);
+				}
 				include_once $class_file;
 				break;
 

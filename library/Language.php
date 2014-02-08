@@ -31,7 +31,10 @@ class Language {
 		$segments		= $xml->getElementsByTagName('segment');
 		
 		foreach($segments as $segment) {
-			self::$_segments[$segment->getAttribute('id')]	= $segment->firstChild->nodeValue;
+			$segment instanceof DOMNode;
+			if($segment->hasChildNodes()) {
+				self::$_segments[$segment->getAttribute('id')]	= $segment->firstChild->nodeValue;
+			}
 		}
 	}
 	
