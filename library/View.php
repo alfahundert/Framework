@@ -23,7 +23,7 @@ class View {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->RenderHeader();
+#		$this->RenderHeader();
 	}
 	
 	/**
@@ -99,6 +99,8 @@ class View {
 	 * @return void
 	 */
 	public function Render($controller=DEFAULT_CONTROLLER, $view='index') {
+		$this->RenderHeader();
+		
 		include_once PATH_APPLICATION . ucfirst($controller) . DS . 'views' . DS . $view . ".phtml";
 	
 		include_once PATH_VIEW_FOOTER;

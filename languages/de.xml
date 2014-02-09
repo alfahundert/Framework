@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<language>
 		<segment id=""></segment>
+		<segment id="lbl_cancel">Abbrechen</segment>
 		<segment id="lbl_username">Benutzername</segment>
 		<segment id="lbl_password">Passwort</segment>
 		<segment id="lbl_login">Einloggen</segment>
@@ -9,6 +10,17 @@
 		<segment id="lbl_news">Neuigkeiten</segment>
 		<segment id="lbl_language">Sprache</segment>
 		<segment id="lbl_server">Server</segment>
+		<segment id="lbl_mail">E-Mail</segment>
+		<segment id="lbl_create_new_account">Neuen Benutzer anlegen</segment>
+		<segment id="lbl_accept_tou">Hiermit akzeptiere ich die</segment>
+		<segment id="lbl_tou_short">AGB</segment>
+		<segment id="lbl_registration_successfull">Benutzer erfolgreich angelegt</segment>
+		<segment id="lbl_registration_failed">Registration fehlgeschlagen</segment>
+		<segment id="lbl_close">Schließen</segment>
+		
+		<segment id="msg_mail_send_to">Eine E-Mail mit einem Aktivierungslink wurde an die angegebene Adresse gesendet.</segment>
+		<segment id="msg_registration_failure">Beim Anlegen des Bentuzers trat ein Fehler auf.</segment>
+		<segment id="msg_pls_try_again_later">Bitte versuche es später erneut.</segment>
 		
 		<segment id="lang_german">Deutsch</segment>
 		<segment id="lang_english">Englisch</segment>
@@ -18,4 +30,9 @@
 		<segment id="nav_about_us">Impressum</segment>
 		<segment id="nav_media">Media</segment>
 		<segment id="nav_ticketsystem">Ticketsystem</segment>
+		
+		<segment id="exc_at_least_x_chars">Mindestens %d Zeichen!</segment>
+		<segment id="exc_not_allowed_chars">Unerlaubte Zeichen!</segment>
+		<segment id="exc_username_already_taken">Benutzername wird bereits verwendet!</segment>
+		<segment id="exc_mail_already_taken">E-Mail wird bereits verwendet!</segment>
 	</language>

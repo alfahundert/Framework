@@ -29,19 +29,28 @@ function debug($var) {
  * @since 26.01.2014
  *
  * @param string $label
+ * @param array $params
+ * @param bool $return
  * 
  * @return string
  */
 function Get($label, $params=array(), $return=false) {
 	Language::LoadFile(Language::GetLanguage());
-	
 	$segment		= Language::GetSegment($label);
+	
+	$func_arr[]	= $segment;
+	
+	if(count($params > 0)) {
+		foreach($params as $param) {
+			$func_arr[]	= $param;
+		}
+	}
 	
 	// Return result
 	if($return) {
-		return sprintf($segment, $params);
+		return call_user_func_array('sprintf', $func_arr);
 	}
 	
 	// Echo result
-	echo sprintf($segment, $params);
+	echo call_user_func_array('sprintf', $func_arr);
 }

@@ -47,7 +47,7 @@ class Bootstrap {
 	public function __construct() {
 		$this->_loadConfigs();		
 		$this->_initAutoloader();
-		include_once '../library/Functions.php';
+		include_once 'Functions.php';
 		spl_autoload_register(array('Autoloader' , 'Loader'));
 		set_exception_handler("ExceptionHandler::catchException");
 	}
@@ -92,7 +92,7 @@ class Bootstrap {
 			unset($url[2]); // Action
 			
 			// Check if parameters exist
-			if(count($url) > 1) {
+			if(count($url) > 0) {
 				foreach($url as $param) {
 					$this->_params[]	= $param;
 				}

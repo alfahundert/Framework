@@ -75,11 +75,19 @@ class URI {
 	 * @param string $controller
 	 * @param string $action
 	 * @param array $params
+	 * @param bool $external
+	 * @param string $protocoll
 	 *
 	 * @return string
 	 */
-	static public function GenerateUrl($controller, $action=NULL, $params=array()) {
-		$url	= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
+	static public function GenerateUrl($controller, $action=NULL, $params=array(), $external=false, $protocol='http') {
+		$url	= '';
+		
+		if($external) {
+			$url	.= $protocol . '://' . DEFAULT_DOMAIN;
+		}
+		
+		$url	.= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
 		
 		if(!is_null($action)) {
 			$url	.= strtolower($action) . '/';
@@ -104,7 +112,7 @@ class URI {
 	 *
 	 * @return void
 	 */
-	static public function ShowHttpError($code, $show_file=false) {
+	static public function ShowHttpError($code, $show_file=true) {
 		if(empty($code)) {
 			throw new Exception('No errorcode set!');
 		}
@@ -113,7 +121,7 @@ class URI {
 		header("HTTP/1.0 ". $code);
 		
 		if($show_file) {
-			include "";
+			include PATH_PUBLIC . $code . '.php';
 		}
 		
 		exit;

@@ -27,7 +27,7 @@ class Database extends PDO {
 	 * 
 	 * @return mixed
 	 */
-	public function Select($query, $params=array(), $fetchMode = PDO::FETCH_ASSOC, $column=NULL) {
+	public function Select($query, $params=array(), $column=NULL, $fetchMode = PDO::FETCH_ASSOC) {
 		$sth	= $this->prepare($query);
 		
 		$sth->execute($params);
