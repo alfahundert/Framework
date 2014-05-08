@@ -62,19 +62,20 @@ class Bootstrap {
 	 */
 	public function Init() {
 		
-		$url	= URI::GetParam('url');
+		$url_complete	= URI::GetParam('url');
 		
-		if(is_null($url)) {
+		if(is_null($url_complete)) {
 			// Call controller ans method
 			Language::Set();
 			URI::Redirect();
 		} else {
 			
-			$url	= explode("/", rtrim($url, "/"));
-			Language::Set();
+			$url	= explode("/", rtrim($url_complete, "/"));
 			
 			if(isset($url[0])) {
-				Language::Set((strtolower($url[0])));
+				Language::Set(strtolower($url[0]));
+			} else {
+				Language::Set();
 			}
 			
 			if(isset($url[1])) {

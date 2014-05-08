@@ -11,4 +11,5 @@ define("PATH_ERROR_LOG", PATH_ROOT . 'logs' . DS . 'errors.log');
 
 define("PATH_DEFAULT_VIEWS", PATH_APPLICATION . ucfirst(DEFAULT_CONTROLLER) . DS . 'views' . DS);
 define("PATH_VIEW_HEADER", PATH_DEFAULT_VIEWS . 'header.phtml');
+define("PATH_VIEW_NAVIGATION", PATH_DEFAULT_VIEWS . 'navigation.phtml');
 define("PATH_VIEW_FOOTER", PATH_DEFAULT_VIEWS . 'footer.phtml');

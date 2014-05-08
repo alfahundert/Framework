@@ -88,6 +88,18 @@ class View {
 	}
 	
 	/**
+	 * Render top navigation
+	 *
+	 * @author Adrian Fischer
+	 * @since 11.02.2014
+	 *
+	 * @return void
+	 */
+	public function RenderNavigation() {
+		include_once PATH_VIEW_NAVIGATION;
+	}
+	
+	/**
 	 * Render view
 	 *
 	 * @author Adrian Fischer
@@ -100,6 +112,7 @@ class View {
 	 */
 	public function Render($controller=DEFAULT_CONTROLLER, $view='index') {
 		$this->RenderHeader();
+		$this->RenderNavigation();
 		
 		include_once PATH_APPLICATION . ucfirst($controller) . DS . 'views' . DS . $view . ".phtml";
 	

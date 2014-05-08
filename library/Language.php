@@ -69,7 +69,7 @@ class Language {
 			$result	= "unknown";
 		}
 		
-		if($result != DEFAULT_LANGUAGE) {
+		if(strtolower($result) != DEFAULT_LANGUAGE) {
 			return 'en';
 		} else {
 			return DEFAULT_LANGUAGE;
@@ -106,7 +106,7 @@ class Language {
 	 *
 	 * @return void
 	 */
-	static public function Set($language=NULL) {
+	static public function Set($language=NULL) {		
 		if(!is_null($language) && in_array(strtolower($language), self::GetAvailableLanguages())) {
 			self::$_language		= strtolower($language);
 		} else {

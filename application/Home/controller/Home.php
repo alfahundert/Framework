@@ -81,7 +81,7 @@ class HomeController extends Controller {
 			// Construct mail
 			$mail	= new Mail();
 			$mail->SetFromName('Browsergame');
-			$mail->SetFromMail('nopeply@adrian-fischer.net');
+			$mail->SetFromMail('noreply@adrian-fischer.net');
 			$mail->SetSubject('Willkommen ' . $username);
 			$mail->SetTo($adress);
 			$mail->SetContent(URI::GenerateUrl('home', 'activate', array($activation_token), true));

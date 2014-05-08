@@ -80,24 +80,35 @@ class URI {
 	 *
 	 * @return string
 	 */
-	static public function GenerateUrl($controller, $action=NULL, $params=array(), $external=false, $protocol='http') {
+	static public function GenerateUrl($controller, $action=NULL, $params=array(), $external=false, $protocol='http', $language=NULL) {
 		$url	= '';
 		
 		if($external) {
 			$url	.= $protocol . '://' . DEFAULT_DOMAIN;
 		}
 		
-		$url	.= '/' . Language::GetLanguage() . '/' . strtolower($controller) . '/';
+		// Add language
+		if(is_null($language)) {
+			$lang	= Language::GetLanguage();
+		} else {
+			$lang	= $language;
+		}
 		
+		$url	.= '/' . $lang . '/' . strtolower($controller) . '/';
+		
+		// Add action
 		if(!is_null($action)) {
 			$url	.= strtolower($action) . '/';
 		}
 		
+		// Add params
 		if(is_array($params) && count($params) > 0) {
 			foreach($params as $param) {
 				$url	.= $param . '/';
 			}
 		}
+		
+		// Return URL
 		return $url;
 	}
 
@@ -125,6 +136,5 @@ class URI {
 		}
 		
 		exit;
-	}
-	
+	}	
 }
